@@ -1,0 +1,31 @@
+{
+
+  "Resources" : {
+    "myCFEc2" : {
+      "Type" : "AWS::EC2::Instance",
+      "Metadata":{
+        "AWS::CloudFormation::Init" : {
+		"config" : {
+			"packages": {
+				"yum":{
+  					"httpd" : []
+				}
+    			}
+		}
+		}},
+      "Properties" : {
+        "KeyName" : "MyOregonEC2Key",
+        "ImageId" : "ami-d0f506b0",
+        "InstanceType" : "t2.micro",
+        "IamInstanceProfile" : "S3-Admin-Access",
+        "NetworkInterfaces": [{
+        	"AssociatePublicIpAddress" : "true",
+        	"DeviceIndex" : "0",
+        	"GroupSet" : ["sg-f667ed91"],
+        	"SubnetId" : "subnet-9fb0a9e8"
+        }],
+	"UserData": { "Fn::Base64": "#!/bin/sh\n/opt/aws/bin/cfn-init -s cfS5Test -r myCFEc2\n"}
+	}
+      }
+}
+}

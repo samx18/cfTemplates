@@ -1,0 +1,31 @@
+{
+
+  "Resources" : {
+    "myCFEc2" : {
+      "Type" : "AWS::EC2::Instance",
+      "Metadata":{
+        "AWS::CloudFormation::Init" : {
+		"config" : {
+			"packages": {
+				"yum":{
+  					"httpd" : []
+				}
+    			}
+		}
+		}},
+      "Properties" : {
+        "KeyName" : "MyCTREC2Key",
+        "ImageId" : "ami-6869aa05",
+        "InstanceType" : "t2.micro",
+        "IamInstanceProfile" : "S3-Admin-Access",
+        "NetworkInterfaces": [{
+        	"AssociatePublicIpAddress" : "true",
+        	"DeviceIndex" : "0",
+        	"GroupSet" : ["sg-04973562"],
+        	"SubnetId" : "subnet-14f9fd60"
+        }],
+	"UserData": { "Fn::Base64": "#!/bin/sh\n/opt/aws/bin/cfn-init -s cfS5Test -r myCFEc2\n"}
+	}
+      }
+}
+}

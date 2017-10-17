@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters: 
+  InstanceTypeParameter: 
+    Type: String
+    Default: t2.micro
+    AllowedValues: 
+      - t2.micro
+      - t2.small
+      - t2.medium
+    Description: Enter t2.micro, t2.small, or t1.medium. Default is t2.micro.
+Resources:
+  MyEc2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-e689729e
+      InstanceInitiatedShutdownBehavior: stop
+      InstanceType: 
+        Ref: InstanceTypeParameter
+      KeyName: SamOregonEC2
+      SecurityGroupIds: [sg-20fa3658]
+      SubnetId: subnet-6a130a1c
+      Tags:
+        -
+          Key: "Name"
+          Value: "CFInstance"
+        -
+          Key: "Client"
+          Value: "CTR"

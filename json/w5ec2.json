@@ -1,0 +1,36 @@
+{
+
+  "Resources" : {
+    "myCFEc2" : {
+      "Type" : "AWS::EC2::Instance",
+      "Metadata":{
+        "AWS::CloudFormation::Init" : {
+		"config" : {
+			"packages": {
+				"yum":{
+  					"httpd" : []
+				}
+      }
+		}}},
+      "Properties" : {
+        "KeyName" : "MyOregonEC2Key",
+        "ImageId" : "ami-d0f506b0",
+        "InstanceType" : "t2.micro",
+        "IamInstanceProfile" : "S3-Admin-Access",
+        "NetworkInterfaces": [{
+        	"AssociatePublicIpAddress" : "true",
+        	"DeviceIndex" : "0",
+        	"GroupSet" : ["sg-f667ed91"],
+        	"SubnetId" : "subnet-9fb0a9e8"
+        }],
+          "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+            "#!/bin/bash\n",
+            "yum install httpd -y\n",
+            "service httpd start\n",
+            "echo \"<html><h1>Hello C17LV attendees, Welcome!</h1></html>\" > /var/www/html/index.html\n",
+            "echo \"<b>As you can see, in addition to provisioning a server I can also, install a simple HTTP server and create a landing page for myself!</b>\" >> /var/www/html/index.html\n"
+            ]]}}
+      }
+    }
+  }
+}

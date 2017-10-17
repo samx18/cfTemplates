@@ -1,0 +1,19 @@
+{
+  "Resources" : {
+    "myCFEc2" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "KeyName" : "MyOregonEC2Key",
+        "ImageId" : "ami-d0f506b0",
+        "InstanceType" : "t2.micro",
+        "IamInstanceProfile" : "S3-Admin-Access",
+        "NetworkInterfaces": [{
+        	"AssociatePublicIpAddress" : "true",
+        	"DeviceIndex" : "0",
+        	"GroupSet" : ["sg-f667ed91"],
+        	"SubnetId" : "subnet-9fb0a9e8"
+        }]
+      }
+    }
+   }
+}
