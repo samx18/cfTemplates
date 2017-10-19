@@ -2,41 +2,99 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: "Creation of VPC & subnets using the Cloud Formation Template"
 
-# Parameters:
-#   VPCCIDRBlock:
-#     Description: "Specify a VPC CIDR block"
-#     Type: String 
 
 Resources:
-  MyVPCUsingCF:
+# Create a IGW
+  myIGW:
+    Type: "AWS::EC2::InternetGateway"
+    Properties: 
+      Tags:
+        - 
+          Key: "Name"
+          Value: "myIGW"
+# Create a new VPC
+  
+  myVPC:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: "10.0.0.0/16"
       Tags:
         -
           Key: "Name"
-          Value: "MyVPCCF"
+          Value: "myVPC"
         -
           Key: "Client"
           Value: "CTR"
-  mySubnet:
+
+#Attach IGW to VPC
+
+  myGatewayAttach:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties: 
+      InternetGatewayId: !Ref myIGW
+      VpcId: !Ref myVPC
+
+#Create new public route table
+
+  myRouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref myVPC  
+
+# Add route to the internet via IGW to the public route table
+
+  myRoute:
+    Type: "AWS::EC2::Route"
+    Properties:
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId: !Ref myIGW
+      RouteTableId: !Ref myRouteTable
+
+
+
+  myPublicSubnet:
     Type: "AWS::EC2::Subnet"
     Properties:
-      # AssignIpv6AddressOnCreation: true
-      # AvailabilityZone: ""
       CidrBlock: "10.0.1.0/24"
       MapPublicIpOnLaunch: true
       Tags:
         - 
           Key: "Name"
-          Value: "mySubnet"
-      VpcId: !Ref MyVPCUsingCF
+          Value: "myPublicSubnet"
+      VpcId: !Ref myVPC
+  
+
+# Assocaite public route tabe to public subnet
+
+  myRouteAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties: 
+      RouteTableId: !Ref myRouteTable
+      SubnetId: !Ref myPublicSubnet      
+  
+  myPrivateSubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      CidrBlock: "10.0.2.0/24"
+      # MapPublicIpOnLaunch: true
+      Tags:
+        - 
+          Key: "Name"
+          Value: "myPrivateSubnet"
+      VpcId: !Ref myVPC
+
+# Stack output values
+
 Outputs:
   VPCId:
-    Value: !Ref MyVPCUsingCF
+    Value: !Ref myVPC
   VPCCIDRBlock:
-    Value: !GetAtt MyVPCUsingCF.CidrBlock
-  SubnetID:
-    Value: !Ref mySubnet
-  SubnetAZ:
-    Value: !GetAtt mySubnet.AvailabilityZone
+    Value: !GetAtt myVPC.CidrBlock
+  PublicSubnetID:
+    Value: !Ref myPublicSubnet
+  PublicSubnetAZ:
+    Value: !GetAtt myPublicSubnet.AvailabilityZone
+  PrivateSubnetID:
+    Value: !Ref myPublicSubnet
+  PrivateSubnetAZ:
+    Value: !GetAtt myPrivateSubnet.AvailabilityZone
