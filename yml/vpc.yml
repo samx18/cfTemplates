@@ -1,0 +1,25 @@
+# CF Template to create VPC with parameters
+AWSTemplateFormatVersion: 2010-09-09
+Description: "Creation of VPC using the Cloud Formation Template"
+Parameters:
+  VPCCIDRBlock:
+    Description: "Specify a VPC CIDR block"
+    Type: String 
+
+Resources:
+  MyVPCUsingCF:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VPCCIDRBlock
+      Tags:
+        -
+          Key: "Name"
+          Value: "MyVPCCF"
+        -
+          Key: "Client"
+          Value: "CTR"
+Outputs:
+  VPCId:
+    Value: !Ref MyVPCUsingCF
+  VPCCIDRBlock:
+    Value: !GetAtt MyVPCUsingCF.CidrBlock
