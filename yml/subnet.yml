@@ -1,0 +1,42 @@
+# CF Template to create VPC with parameters
+AWSTemplateFormatVersion: 2010-09-09
+Description: "Creation of VPC & subnets using the Cloud Formation Template"
+
+# Parameters:
+#   VPCCIDRBlock:
+#     Description: "Specify a VPC CIDR block"
+#     Type: String 
+
+Resources:
+  MyVPCUsingCF:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+      Tags:
+        -
+          Key: "Name"
+          Value: "MyVPCCF"
+        -
+          Key: "Client"
+          Value: "CTR"
+  mySubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      # AssignIpv6AddressOnCreation: true
+      # AvailabilityZone: ""
+      CidrBlock: "10.0.1.0/24"
+      MapPublicIpOnLaunch: true
+      Tags:
+        - 
+          Key: "Name"
+          Value: "mySubnet"
+      VpcId: !Ref MyVPCUsingCF
+Outputs:
+  VPCId:
+    Value: !Ref MyVPCUsingCF
+  VPCCIDRBlock:
+    Value: !GetAtt MyVPCUsingCF.CidrBlock
+  SubnetID:
+    Value: !Ref mySubnet
+  SubnetAZ:
+    Value: !GetAtt mySubnet.AvailabilityZone
