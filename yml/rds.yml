@@ -1,0 +1,70 @@
+Parameters:
+  DBMasterUser:
+    Type: String
+  DBMasterPassword:
+    Type: String
+Resources:
+  myDBSubnetGroup:
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties: 
+      DBSubnetGroupDescription: String
+      SubnetIds:
+        - subnet-902febf4
+        - subnet-a1eadef8
+      Tags:
+        - 
+          Key: "Name"
+          Value: myDBSubnetGroup
+
+  myRDSDB:
+    Type: "AWS::RDS::DBInstance"
+    Properties:
+      AllocatedStorage: 10
+      # AllowMajorVersionUpgrade: Boolean
+      # AutoMinorVersionUpgrade: Boolean
+      # AvailabilityZone: String
+      # BackupRetentionPeriod: String
+      # CharacterSetName: String
+      # CopyTagsToSnapshot: Boolean
+      # DBClusterIdentifier: String
+      DBInstanceClass: db.t2.micro
+      # DBInstanceIdentifier: String
+      DBName: myRDSDB
+      # DBParameterGroupName: String
+      # DBSecurityGroups:
+        # - String
+      # DBSnapshotIdentifier: String
+      DBSubnetGroupName: !Ref myDBSubnetGroup
+      # Domain: String
+      # DomainIAMRoleName: String
+      Engine: mySQL
+      # EngineVersion: String
+      # Iops: Number
+      # KmsKeyId: String
+      # LicenseModel: String
+      MasterUsername: !Ref DBMasterUser
+      MasterUserPassword: !Ref DBMasterPassword
+      # MonitoringInterval: Integer
+      # MonitoringRoleArn: String
+      # MultiAZ: Boolean
+      # OptionGroupName: String
+      # Port: String
+      # PreferredBackupWindow: String
+      # PreferredMaintenanceWindow: String
+      # PubliclyAccessible: Boolean
+      # SourceDBInstanceIdentifier: String
+      # StorageEncrypted: Boolean
+      # StorageType: String
+      Tags:
+        -
+          Key: "Name"
+          Value: "myRDSDB"
+      # Timezone: String
+      VPCSecurityGroups:
+        - sg-2bb7274c
+
+Outputs:
+  DBEndpointAddress:
+    Value: !GetAtt myRDSDB.Endpoint.Address
+  DBPort:
+    Value: !GetAtt myRDSDB.Endpoint.Port
