@@ -1,8 +1,24 @@
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: "DB Configuration"
+        Parameters:
+          - DBMasterUser
+          - DBMasterPassword
+    ParameterLabels:
+      DBMasterUser:
+        default: Specify a DB Master Username
+      DBMasterPassword:
+        default: Specify a password for the DB master user
+
 Parameters:
   DBMasterUser:
     Type: String
   DBMasterPassword:
     Type: String
+    NoEcho: true
 Resources:
   myDBSubnetGroup:
     Type: "AWS::RDS::DBSubnetGroup"
