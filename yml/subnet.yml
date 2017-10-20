@@ -83,6 +83,15 @@ Resources:
           Value: "myPrivateSubnet"
       VpcId: !Ref myVPC
 
+# Create Webserver EC2 instance in public subnet
+
+  myWebEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-e689729e
+      InstanceType: t2.micro 
+      SubnetId: !Ref myPublicSubnet
+
 # Stack output values
 
 Outputs:
@@ -98,3 +107,7 @@ Outputs:
     Value: !Ref myPublicSubnet
   PrivateSubnetAZ:
     Value: !GetAtt myPrivateSubnet.AvailabilityZone
+  WebserverID:
+    Value: !Ref myWebEC2
+  WebServerPublicIP:
+    Value: !GetAtt myWebEC2.PublicIp
